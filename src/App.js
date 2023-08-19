@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const scrollListener = () => {
+    const scrollY = document.body.getBoundingClientRect();
+    setScrollProgress(Math.trunc(Math.abs(scrollY.top)));
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollListener);
+
+    return () => window.removeEventListener("scroll", scrollListener);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div className="scroll-heading">Scroll Progress : {scrollProgress}</div>
+
+      <div className="content">
+        {new Array(1000).fill(0).map((el, idx) => (
+          <div key={idx}>Some Content</div>
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default App;

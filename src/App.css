@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+.scroll-heading {
+  padding: 10px;
+  border-bottom: 1px solid #dcdcdc;
+  position: sticky;
+  top: 0;
+  background-color: wheat;
+  z-index: 1;
+}
+
+.content {
+  padding: 10px;
+}
