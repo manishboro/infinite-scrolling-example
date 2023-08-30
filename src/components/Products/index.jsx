@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./style.module.css";
 
 import ProductCard from "../ProductCard";
@@ -13,7 +13,7 @@ const Products = () => {
   const [isError, setIsError] = useState(false);
   const [isInitialFetch, setIsInitialFetch] = useState(false);
 
-  const [page, setPage] = useState(1);
+  const pageRef = useRef(1);
   const [hasMore, setHasMore] = useState(false);
 
   const fetchPosts = async ({ page, isFetchingFirstTime }) => {
@@ -52,17 +52,17 @@ const Products = () => {
 
   // Initial fetch
   useEffect(() => {
-    fetchPosts({ page, isFetchingFirstTime: true });
+    fetchPosts({ page: pageRef.current, isFetchingFirstTime: true });
   }, []);
 
   // Infinite scrolling
   const [targetRef, isIntersecting] = useIntersectionObserver({ threshold: 1 });
 
   useEffect(() => {
-    setPage((prevPage) => {
-      hasMore && isIntersecting && fetchPosts({ page: prevPage + 1 });
-      return hasMore && isIntersecting ? prevPage + 1 : prevPage;
-    });
+    if (hasMore && isIntersecting) {
+      pageRef.current = pageRef.current + 1;
+      fetchPosts({ page: pageRef.current });
+    }
   }, [isIntersecting, hasMore]);
 
   return (
